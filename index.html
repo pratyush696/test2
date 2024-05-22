@@ -1,0 +1,117 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+    <style>
+        .error {
+            color: red;
+        }
+        .error-border {
+            border-color: red;
+        }
+    </style>
+</head>
+<body>
+    <h1>Booking Place for your Dinner!</h1>
+    <label for="name">Name:</label>
+    <input type="text" id="name" onblur="validateName()">
+    <span id="name-error" class="error"></span>
+    <br><br>
+    <label for="phone">Phone number: </label>
+    <input type="text" id="phone" onblur="validatePhone()">
+    <span id="phone-error" class="error"></span>
+    <br><br>
+    <p>Select a time</p>
+    <input type="radio" name="programtime" value="5:00 pm" checked> 5:00 pm <br> 
+    <input type="radio" name="programtime" value="6:00 pm"> 6:00 pm <br> 
+    <input type="radio" name="programtime" value="7:00 pm"> 7:00 pm<br>
+    <input type="radio" name="programtime" value="8:00 pm"> 8:00 pm<br>
+
+    <p>What would you like to have with us?</p>
+    <input type="checkbox" name="order" value="Starters"> Starters <br>
+    <input type="checkbox" name="order" value="Main course"> Main course <br>
+    <input type="checkbox" name="order" value="Desserts"> Desserts <br>
+    <input type="checkbox" name="order" value="Drinks"> Drinks
+    <br><br>
+    <button id="submit" onclick="submitform()">Submit</button>
+    <span id="submit-message"></span>
+
+    <script>
+        function validateName() {
+            const nameInput = document.getElementById('name');
+            const nameError = document.getElementById('name-error');
+            const nameValue = nameInput.value.trim();
+
+            if (!nameValue) {
+                nameError.textContent = 'Error: Name is empty.';
+                nameInput.classList.add('error-border');
+                return false;
+            }
+
+            const nameParts = nameValue.split(' ');
+            if (nameParts.length < 2) {
+                nameError.textContent = 'Error: First and last names are required.';
+                nameInput.classList.add('error-border');
+                return false;
+            }
+
+            nameError.textContent = '';
+            nameInput.classList.remove('error-border');
+            return true;
+        }
+
+        function validatePhone() {
+            const phoneInput = document.getElementById('phone');
+            const phoneError = document.getElementById('phone-error');
+            const phoneValue = phoneInput.value.trim();
+
+            if (!phoneValue) {
+                phoneError.textContent = 'Error: Phone number is empty.';
+                phoneInput.classList.add('error-border');
+                return false;
+            }
+
+            if (phoneValue.length !== 6) {
+                phoneError.textContent = 'Error: Phone numbers must have exactly 6 characters.';
+                phoneInput.classList.add('error-border');
+                return false;
+            }
+
+            if (!/^\d/.test(phoneValue)) {
+                phoneError.textContent = 'Error: Phone number must start with a number.';
+                phoneInput.classList.add('error-border');
+                return false;
+            }
+
+            phoneError.textContent = '';
+            phoneInput.classList.remove('error-border');
+            return true;
+        }
+
+        function submitform() {
+            const isNameValid = validateName();
+            const isPhoneValid = validatePhone();
+
+            if (!isNameValid || !isPhoneValid) {
+                return;
+            }
+
+            const name = document.getElementById('name').value.trim();
+            const phone = document.getElementById('phone').value.trim();
+            const time = document.querySelector('input[name="programtime"]:checked').value;
+            const orders = document.querySelectorAll('input[name="order"]:checked');
+            let orderList = [];
+
+            for (let i = 0; i < orders.length; i++) {
+                orderList.push(orders[i].value);
+            }
+
+            const message = `Reservation for ${name} phone (${phone}) at ${time}. Orders are: ${orderList.join(', ')}`;
+            document.getElementById('submit-message').textContent = message;
+        }
+    </script>
+</body>
+</html>
